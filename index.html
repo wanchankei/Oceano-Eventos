@@ -41,7 +41,7 @@
     nav.scrolled.on-hero .logo-img--light { display:none !important; }
 
     /* WHATSAPP FLOTANTE */
-    .wa-btn{position:fixed;bottom:1.75rem;right:1.75rem;z-index:500;width:56px;height:56px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(38,45,81,.35);text-decoration:none;transition:transform .25s,box-shadow .25s,opacity .5s ease,visibility .5s ease;opacity:0;visibility:hidden;}
+    .wa-btn{position:fixed;bottom:1.75rem;right:1.75rem;z-index:197;width:56px;height:56px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(38,45,81,.35);text-decoration:none;transition:transform .25s,box-shadow .25s,opacity .5s ease,visibility .5s ease;opacity:0;visibility:hidden;}
     .wa-btn.visible{opacity:1;visibility:visible;}
     .wa-btn.visible:hover{transform:scale(1.1) translateY(-2px);box-shadow:0 8px 28px rgba(38,45,81,.45);}
     .wa-btn:hover{transform:scale(1.1) translateY(-2px);box-shadow:0 8px 28px rgba(38,45,81,.45);}
@@ -985,7 +985,7 @@
 <section id="testimonios">
   <div class="test-header rv">
     <span class="label-tag">Testimonios</span>
-    <h2>Ellos ya lo <em>vivieron</em></h2>
+    <h2>Lo que dicen nuestros <em>festejados</em></h2>
     <p>Más de 500 eventos avalan nuestra dedicación y calidad.</p>
   </div>
   <div class="marquee-wrap">
@@ -1437,7 +1437,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('hamburger').addEventListener('click', openMenu);
   document.getElementById('mobileClose').addEventListener('click', closeMenu);
   mmOverlay.addEventListener('click', closeMenu);
-  document.querySelectorAll('.mm-nav a').forEach(a => a.addEventListener('click', closeMenu));
+  document.querySelectorAll('.mm-nav a, .mm-cta-btn').forEach(a => a.addEventListener('click', closeMenu));
 
   /* ── PAQUETES ACCORDION ── */
   window.pkgOpen = function(el){
