@@ -87,11 +87,122 @@
     .nav-cta:hover{background:var(--gold);transform:translateY(-1px);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
     .hamburger span{display:block;width:22px;height:1.5px;background:var(--navy);transition:all .3s;}
-    .mobile-menu{display:none;position:fixed;inset:0;background:var(--navy);z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;}
-    .mobile-menu.open{display:flex;}
-    .mobile-menu a{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.4rem;font-weight:600;color:#fff;text-decoration:none;transition:color .3s;letter-spacing:.05em;}
-    .mobile-menu a:hover{color:var(--gold);}
-    .mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:rgba(255,255,255,.5);font-size:1.5rem;cursor:pointer;}
+
+    /* ── MOBILE MENU — right-side drawer ── */
+    .mm-overlay{
+      position:fixed;inset:0;background:rgba(8,12,28,.6);z-index:198;
+      opacity:0;visibility:hidden;
+      transition:opacity .35s ease,visibility .35s;
+      backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    }
+    .mm-overlay.open{opacity:1;visibility:visible;}
+
+    .mobile-menu{
+      position:fixed;top:0;right:0;bottom:0;
+      width:80%;max-width:320px;
+      background:var(--navy);
+      z-index:199;
+      display:flex;flex-direction:column;align-items:stretch;
+      transform:translateX(102%);
+      transition:transform .5s cubic-bezier(.77,0,.18,1);
+      overflow:hidden;
+      box-shadow:-12px 0 48px rgba(0,0,0,.4);
+    }
+    .mobile-menu.open{transform:translateX(0);}
+
+    /* ① Logo + close — fixed height */
+    .mm-header{
+      flex-shrink:0;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.4rem 1.5rem 1.2rem;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .mm-logo-img{height:26px;opacity:.7;filter:brightness(0) invert(1);display:block;}
+
+    .mobile-close{
+      flex-shrink:0;
+      background:none;border:1px solid rgba(255,255,255,.18);
+      color:rgba(255,255,255,.55);width:34px;height:34px;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:background .2s,border-color .2s,color .2s;
+    }
+    .mobile-close:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4);color:#fff;}
+    .mobile-close svg{width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;}
+
+    /* ② Nav links — grows to fill all available space */
+    .mm-nav{
+      flex:1 1 0%;
+      display:flex;flex-direction:column;justify-content:center;
+      padding:0 1.5rem;
+      overflow:hidden;
+    }
+    .mm-nav a{
+      display:flex;align-items:center;justify-content:space-between;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:1.3rem;font-weight:700;letter-spacing:-.01em;
+      color:rgba(255,255,255,.2);
+      text-decoration:none;
+      padding:.7rem 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      transition:color .25s,padding-left .2s;
+      line-height:1;
+    }
+    .mm-nav a:last-child{border-bottom:none;}
+    .mm-nav a:hover{color:#fff;padding-left:.4rem;}
+    .mm-nav a:hover .mm-num{color:var(--gold);}
+    .mm-num{
+      font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:500;
+      letter-spacing:.2em;color:rgba(255,255,255,.13);
+      transition:color .25s;flex-shrink:0;
+    }
+
+    /* ③ Footer — fixed height, always at bottom */
+    .mm-footer{
+      flex-shrink:0;
+      padding:1.1rem 1.5rem calc(1.25rem + env(safe-area-inset-bottom,0px));
+      border-top:1px solid rgba(255,255,255,.07);
+    }
+    .mm-cta-btn{
+      display:block;text-align:center;
+      font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:600;
+      letter-spacing:.11em;text-transform:uppercase;
+      color:var(--navy);background:var(--gold);
+      padding:.9rem 1rem;text-decoration:none;
+      margin-bottom:1rem;
+      transition:opacity .2s;
+    }
+    .mm-cta-btn:hover{opacity:.85;}
+    .mm-socials{display:flex;align-items:center;justify-content:center;gap:1rem;}
+    .mm-social-link{
+      display:flex;align-items:center;justify-content:center;
+      width:34px;height:34px;
+      border:1px solid rgba(255,255,255,.14);
+      color:rgba(255,255,255,.4);
+      text-decoration:none;
+      transition:border-color .2s,color .2s,background .2s;
+    }
+    .mm-social-link:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,169,110,.08);}
+    .mm-social-link svg{width:15px;height:15px;fill:currentColor;display:block;}
+
+    /* Stagger entrance animation */
+    .mobile-menu .mm-nav a{opacity:0;transform:translateX(18px);}
+    .mobile-menu.open .mm-nav a{animation:mmLinkIn .45s cubic-bezier(.22,1,.36,1) forwards;}
+    .mobile-menu.open .mm-nav a:nth-child(1){animation-delay:.08s;}
+    .mobile-menu.open .mm-nav a:nth-child(2){animation-delay:.13s;}
+    .mobile-menu.open .mm-nav a:nth-child(3){animation-delay:.18s;}
+    .mobile-menu.open .mm-nav a:nth-child(4){animation-delay:.23s;}
+    .mobile-menu.open .mm-nav a:nth-child(5){animation-delay:.28s;}
+    .mobile-menu.open .mm-nav a:nth-child(6){animation-delay:.33s;}
+    @keyframes mmLinkIn{from{opacity:0;transform:translateX(18px);}to{opacity:1;transform:translateX(0);}}
+
+    /* SECTION SEPARATOR — hero ↔ salon */
+    .section-sep{background:var(--bg);border-bottom:1px solid var(--border);}
+    .section-sep-inner{display:flex;align-items:center;gap:1.5rem;padding:.8rem 3rem;max-width:none;}
+    .ssep-tag{font-size:.55rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);flex-shrink:0;font-family:'DM Sans',sans-serif;}
+    .ssep-rule{flex:1;height:1px;background:var(--border);}
+    .ssep-addr{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);flex-shrink:0;font-family:'DM Sans',sans-serif;}
+    @media(min-width:769px){.section-sep{display:none;}}
+    @media(max-width:768px){.section-sep-inner{padding:.7rem 1.25rem;}}
 
     /* HERO */
     #hero{height:100vh;min-height:640px;position:relative;overflow:hidden;display:flex;align-items:flex-end;}
@@ -110,7 +221,7 @@
     .hero-chip{display:inline-flex;align-items:center;gap:.6rem;background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.4);padding:.35rem 1rem;margin-bottom:1.75rem;}
     .hero-chip span{font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
     .hero-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-    .hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.8rem,7.5vw,6.8rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:#fff;margin-bottom:1.75rem;}
+    .hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(3.2rem,8vw,6.8rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:#fff;margin-bottom:1.75rem;}
     .hero-line{display:block;overflow:hidden;padding-bottom:.15em;}
     .hero-line-inner{display:block;}
     .hero-title .accent{color:var(--gold);}
@@ -134,17 +245,74 @@
     section{padding:6rem 3rem;}
     .label-tag{font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.6rem;}
 
-    /* SALON — redesigned */
+    /* SALON — Awwwards editorial layout */
     #salon{background:var(--bg);position:relative;overflow:hidden;}
     .salon-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
-    .salon-imgs{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:200px 200px;gap:.65rem;position:relative;}
-    .salon-img-w{overflow:hidden;}
-    .salon-img-w img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s ease;filter:brightness(.9) contrast(1.05) saturate(.9);}
-    .salon-img-w:hover img{transform:scale(1.05);}
+
+    /* ── Image collage ── */
+    .salon-imgs{
+      position:relative;
+      display:grid;
+      grid-template-columns:57% 1fr;
+      grid-template-rows:310px 210px;
+      gap:4px;
+    }
+    .salon-img-w{overflow:hidden;position:relative;}
+    .salon-img-w img{
+      width:100%;height:100%;object-fit:cover;display:block;
+      transition:transform 1s cubic-bezier(.25,.46,.45,.94);
+      filter:brightness(.88) contrast(1.06) saturate(.85);
+    }
+    .salon-img-w:hover img{transform:scale(1.08);filter:brightness(.95) contrast(1.04) saturate(1);}
     .salon-img-w.tall{grid-row:span 2;}
-    .salon-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--navy);color:#fff;width:100px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:2;}
-    .salon-badge .bn{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.8rem;font-weight:600;color:var(--gold);line-height:1;}
-    .salon-badge .bl{font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:.2rem;}
+
+    /* Small accent label on top-right image */
+    .salon-img-w:nth-child(2)::after{
+      content:'Interior';
+      position:absolute;bottom:.85rem;left:.85rem;
+      font-family:'DM Sans',sans-serif;
+      font-size:.48rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+      color:rgba(255,255,255,.65);
+      background:rgba(38,45,81,.45);
+      backdrop-filter:blur(6px);
+      padding:.3rem .65rem;
+      pointer-events:none;
+    }
+    .salon-img-w:nth-child(3)::after{
+      content:'Celebraciones';
+      position:absolute;bottom:.85rem;left:.85rem;
+      font-family:'DM Sans',sans-serif;
+      font-size:.48rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+      color:rgba(255,255,255,.65);
+      background:rgba(38,45,81,.45);
+      backdrop-filter:blur(6px);
+      padding:.3rem .65rem;
+      pointer-events:none;
+    }
+
+    /* Badge — anchored to bottom-left of the main image (editorial overlay) */
+    .salon-badge{
+      position:absolute;
+      left:0;bottom:0;
+      width:calc(57% - 2px);
+      background:var(--navy);
+      color:#fff;
+      padding:.9rem 1.25rem;
+      display:flex;align-items:center;gap:1rem;
+      z-index:3;
+      border-top:2px solid var(--gold);
+    }
+    .salon-badge .bn{
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:1.65rem;font-weight:800;
+      color:var(--gold);line-height:1;
+      white-space:nowrap;
+    }
+    .salon-badge .bl{
+      font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;
+      color:rgba(255,255,255,.5);
+      line-height:1.5;
+    }
     .salon-text h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2rem,3.2vw,3.2rem);font-weight:700;line-height:1.05;color:var(--navy);margin:.4rem 0 1.25rem;}
     .salon-text h2 em{font-style:normal;font-weight:800;color:var(--gold);}
     .salon-text p{font-size:.9rem;line-height:1.85;color:var(--text-dim);margin-bottom:1.1rem;}
@@ -392,13 +560,34 @@
       section{padding:4.5rem 1.25rem;}
       #servicios{padding:4.5rem 1.25rem;}
       #ubicacion{padding:4.5rem 1.25rem;}
-      #contacto{padding:4.5rem 1.25rem;}
+      #contacto{padding:0;}
       #hero{height:100svh;}
-      .hero-content{padding:0 1.25rem 7rem;}
-      .slide-dots{right:1.25rem;bottom:2rem;}
-      .hero-stats{flex-direction:row;}
-      .h-stat{flex:1;padding:1rem .75rem;border-left:1px solid rgba(255,255,255,.08);}
+      .hero-content{padding:0 1.25rem 1.5rem;}
+
+      /* HERO STATS centradas */
+      .hero-stats{position:relative;flex-direction:row;width:100%;bottom:auto;right:auto;margin-top:2rem;justify-content:center;}
+      .h-stat{flex:1;padding:1rem .5rem;border-left:1px solid rgba(255,255,255,.08);text-align:center;}
       .h-stat:first-child{border-left:none;}
+      .h-stat .n{font-size:1.45rem;}
+
+      /* HERO content layout fix */
+      #hero{display:flex;flex-direction:column;justify-content:flex-end;}
+      .hero-content{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 1.25rem 1rem;}
+      .slide-dots{right:1.25rem;bottom:calc(7.5rem + env(safe-area-inset-bottom,0px));}
+
+      /* HERO title — bigger, more prominent on mobile */
+      .hero-title{font-size:clamp(3.4rem,12vw,5rem);letter-spacing:-.04em;margin-bottom:1.25rem;}
+      .hero-chip{margin-bottom:1.1rem;}
+      .hero-sub{font-size:.88rem;margin-bottom:1.75rem;}
+
+      /* HERO buttons — equal width stack */
+      .hero-actions{flex-direction:column;align-items:stretch;gap:.65rem;}
+      .btn-prim,.btn-ghost-w{text-align:center;padding:.95rem 1.5rem;}
+
+      /* WA BTN smaller */
+      .wa-btn{bottom:1rem;right:1rem;width:48px;height:48px;}
+      .wa-btn svg{width:24px;height:24px;}
+
       .f-row{grid-template-columns:1fr;}
       .salon-imgs{grid-template-columns:1fr;}
       .salon-badge{display:none;}
@@ -409,9 +598,154 @@
       .ct-form-card{padding:1.75rem 1.25rem;}
       .ct-form-footer{flex-direction:column;align-items:flex-start;}
       .ct-quick-contact{grid-template-columns:1fr;}
-      .svc-grid{grid-template-columns:1fr;}
       .ubi-map-frame iframe{height:280px;}
       .map-badge{display:none;}
+
+      /* CONTACTO fullwidth */
+      .ct-split{grid-template-columns:1fr;min-height:auto;}
+      .ct-img-panel{min-height:260px;margin:0;}
+      .ct-img-content{padding:2.25rem 1.5rem 2rem;}
+      .ct-img-content h2{font-size:1.9rem;}
+      .ct-form-panel{padding:2.5rem 1.25rem 3rem;}
+
+      /* GALERÍA masonry dinámico */
+      .gal-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:auto;gap:3px;}
+      .g1,.g2,.g3,.g4,.g5,.g6{grid-column:auto;height:auto;}
+      .gal-w{height:auto;}
+      .gal-w img{height:100%;width:100%;object-fit:cover;display:block;}
+      .g1{grid-column:span 2;height:200px;}
+      .g2{grid-column:span 1;height:148px;}
+      .g3{grid-column:span 1;height:148px;}
+      .g4{grid-column:span 1;height:148px;}
+      .g5{grid-column:span 1;height:148px;}
+      .g6{grid-column:span 2;height:175px;}
+
+      /* SERVICIOS — 2 columnas en mobile */
+      .svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;}
+      .svc-card{padding:1.5rem 1.1rem;}
+      .svc-header{grid-template-columns:1fr;gap:.75rem;margin-bottom:1.25rem;}
+    }
+
+
+    /* hide mobile-only salon elements on desktop */
+    .salon-mobile-hero,.salon-mobile-thumb-row,.salon-stats-row{display:none;}
+    @media(max-width:768px){
+      .salon-mobile-hero{display:block;}
+      .salon-mobile-thumb-row{display:flex;}
+      .salon-stats-row{display:flex;}
+    }
+
+    /* ── SALON MOBILE — stacked cinematic ── */
+    @media(max-width:768px){
+      #salon{padding:0;}
+      .salon-grid{display:flex;flex-direction:column;gap:0;}
+      .salon-imgs{display:none;}
+
+      /* Big cinematic image with text overlay */
+      .salon-mobile-hero{
+        position:relative;
+        height:82vw;
+        min-height:300px;
+        max-height:420px;
+        overflow:hidden;
+        display:block;
+      }
+      .salon-mobile-hero img{
+        width:100%;height:100%;
+        object-fit:cover;object-position:center 25%;
+        display:block;
+        filter:brightness(.92) contrast(1.04) saturate(.9);
+      }
+      .salon-mobile-hero-overlay{
+        position:absolute;inset:0;
+        background:linear-gradient(175deg,
+          rgba(38,45,81,.0) 30%,
+          rgba(38,45,81,.85) 100%);
+      }
+      .salon-mobile-hero-badge{
+        position:absolute;
+        bottom:1.5rem;left:1.25rem;right:1.25rem;
+        display:flex;align-items:flex-end;justify-content:space-between;
+      }
+      .salon-mobile-hero-badge-num{
+        font-family:'Plus Jakarta Sans',sans-serif;
+        font-size:1.9rem;font-weight:800;
+        color:#fff;line-height:1;letter-spacing:-.03em;
+      }
+      .salon-mobile-hero-badge-num em{font-style:normal;color:var(--gold);}
+      .salon-mobile-hero-badge-txt{
+        font-size:.55rem;font-weight:600;
+        letter-spacing:.18em;text-transform:uppercase;
+        color:rgba(255,255,255,.5);line-height:1.5;text-align:right;
+      }
+
+      /* Thumbnail strip — 3 images, editorial proportions */
+      .salon-mobile-thumb-row{
+        display:grid;
+        grid-template-columns:1fr 1fr 1fr;
+        gap:2px;
+        height:120px;
+      }
+      .salon-mobile-thumb-row img{
+        width:100%;height:100%;
+        object-fit:cover;display:block;
+        filter:brightness(.78) saturate(.88) contrast(1.06);
+        transition:filter .5s ease;
+      }
+      .salon-mobile-thumb-row img:hover{filter:brightness(.9) saturate(1);}
+
+
+      /* Text content area */
+      .salon-text{
+        padding:2rem 1.25rem 2.5rem;
+        background:var(--bg);
+      }
+      .salon-text h2{font-size:clamp(1.7rem,6vw,2.2rem);margin-bottom:1rem;}
+      .salon-text p{font-size:.87rem;line-height:1.8;margin-bottom:.85rem;}
+
+      /* Stats row — minimal horizontal line */
+      .salon-stats-row{
+        display:flex;
+        margin:0 0 1.5rem;
+        border-top:1px solid var(--border);
+        border-bottom:1px solid var(--border);
+        padding:.85rem 0;
+        gap:0;
+      }
+      .salon-stat{
+        flex:1;text-align:center;
+        border-right:1px solid var(--border);
+        padding:.1rem .5rem;
+      }
+      .salon-stat:last-child{border-right:none;}
+      .salon-stat-n{
+        font-family:'Plus Jakarta Sans',sans-serif;
+        font-size:1.25rem;font-weight:800;
+        color:var(--navy);line-height:1;
+      }
+      .salon-stat-n em{font-style:normal;color:var(--gold);}
+      .salon-stat-l{
+        font-size:.5rem;font-weight:600;
+        letter-spacing:.1em;text-transform:uppercase;
+        color:var(--text-dim);margin-top:.2rem;
+      }
+
+      /* Features grid 2x3 */
+      .salon-feats{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:.5rem;
+        margin-top:1.25rem;
+      }
+      .feat-item{
+        display:flex;align-items:center;gap:.5rem;
+        background:var(--bg-alt);
+        border:1px solid var(--border);
+        padding:.6rem .75rem;
+        font-size:.75rem;color:var(--navy);
+      }
+      .feat-icon{width:20px;height:20px;background:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+      .feat-icon svg{width:14px;height:14px;stroke:var(--gold);}
     }
   </style>
 </head>
@@ -442,14 +776,36 @@
   <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
 </nav>
 
+<div class="mm-overlay" id="mmOverlay"></div>
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose">✕</button>
-  <a href="#salon">El Salón</a>
-  <a href="#servicios">Servicios</a>
-  <a href="#galeria">Galería</a>
-  <a href="#paquetes">Paquetes</a>
-  <a href="#faq">FAQ</a>
-  <a href="#contacto">Contacto</a>
+  <div class="mm-header">
+    <img class="mm-logo-img" id="mmLogoImg" src="" alt="Océano Azul"/>
+    <button class="mobile-close" id="mobileClose" aria-label="Cerrar menú">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="mm-nav">
+    <a href="#salon">El Salón<span class="mm-num">01</span></a>
+    <a href="#servicios">Servicios<span class="mm-num">02</span></a>
+    <a href="#galeria">Galería<span class="mm-num">03</span></a>
+    <a href="#paquetes">Paquetes<span class="mm-num">04</span></a>
+    <a href="#faq">FAQ<span class="mm-num">05</span></a>
+    <a href="#contacto">Contacto<span class="mm-num">06</span></a>
+  </div>
+  <div class="mm-footer">
+    <a href="#contacto" class="mm-cta-btn">Cotizá tu evento →</a>
+    <div class="mm-socials">
+      <a href="#" class="mm-social-link" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="#" class="mm-social-link" aria-label="Facebook" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://wa.me/5491100000000" class="mm-social-link" aria-label="WhatsApp" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+    </div>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -498,9 +854,32 @@
   </div>
 </section>
 
+<!-- SECTION SEPARATOR -->
+<div class="section-sep">
+  <div class="section-sep-inner">
+    <span class="ssep-tag">El Salón</span>
+    <span class="ssep-rule"></span>
+  </div>
+</div>
+
 <!-- SALON -->
 <section id="salon">
   <div class="salon-grid">
+    <!-- MOBILE ONLY: fullbleed hero image block -->
+    <div class="salon-mobile-hero">
+      <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=900&q=85" alt="Salón Océano Azul"/>
+      <div class="salon-mobile-hero-overlay"></div>
+      <div class="salon-mobile-hero-badge">
+        <span class="salon-mobile-hero-badge-num">700<em>m²</em> · 400 personas</span>
+        <span class="salon-mobile-hero-badge-txt">Santa Elena 440<br>Barracas, CABA</span>
+      </div>
+    </div>
+    <div class="salon-mobile-thumb-row">
+      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&q=80" alt="Evento"/>
+      <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&q=80" alt="Decoración"/>
+      <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&q=80" alt="Celebración"/>
+    </div>
+    <!-- DESKTOP images (hidden on mobile via CSS) -->
     <div class="salon-imgs rv-l">
       <div class="salon-img-w tall">
         <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=700&q=85" alt="Salón"/>
@@ -516,6 +895,14 @@
     <div class="salon-text">
       <span class="label-tag rv">El Salón</span>
       <h2 class="rv">Un espacio para momentos <em>que perduran</em></h2>
+
+      <!-- MOBILE stats row -->
+      <div class="salon-stats-row">
+        <div class="salon-stat"><div class="salon-stat-n">700<em>m²</em></div><div class="salon-stat-l">Superficie</div></div>
+        <div class="salon-stat"><div class="salon-stat-n"><em>+</em>400</div><div class="salon-stat-l">Invitados</div></div>
+        <div class="salon-stat"><div class="salon-stat-n"><em>+8</em></div><div class="salon-stat-l">Años</div></div>
+      </div>
+
       <p class="rv">Ubicado en Santa Elena 440, Barracas, Océano Azul ofrece más de 700m² de arquitectura industrial renovada con paredes de ladrillo visto y el escenario perfecto para cualquier celebración.</p>
       <p class="rv">Iluminación LED, sonido de alta gama, climatización central y estacionamiento propio. Vos y tus invitados solo tienen que disfrutar.</p>
       <div class="salon-feats rv">
@@ -1040,9 +1427,17 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   /* ── MOBILE MENU ── */
-  document.getElementById('hamburger').addEventListener('click', ()=>document.getElementById('mobileMenu').classList.add('open'));
-  document.getElementById('mobileClose').addEventListener('click', ()=>document.getElementById('mobileMenu').classList.remove('open'));
-  document.querySelectorAll('.mobile-menu a').forEach(a => a.addEventListener('click', ()=>document.getElementById('mobileMenu').classList.remove('open')));
+  const mmMenu    = document.getElementById('mobileMenu');
+  const mmOverlay = document.getElementById('mmOverlay');
+  // Clone white logo into drawer header
+  const navLightLogo = document.querySelector('.logo-img--light');
+  if(navLightLogo){ document.getElementById('mmLogoImg').src = navLightLogo.src; }
+  function openMenu(){  mmMenu.classList.add('open'); mmOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeMenu(){ mmMenu.classList.remove('open'); mmOverlay.classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('hamburger').addEventListener('click', openMenu);
+  document.getElementById('mobileClose').addEventListener('click', closeMenu);
+  mmOverlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('.mm-nav a').forEach(a => a.addEventListener('click', closeMenu));
 
   /* ── PAQUETES ACCORDION ── */
   window.pkgOpen = function(el){
